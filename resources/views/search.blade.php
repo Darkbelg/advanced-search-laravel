@@ -42,7 +42,7 @@
 
             <div class="md:flex md:flex-wrap">
                 <div class="md:flex md:items-center mb-6 md:w-1/2 pt-4">
-                    <div>
+                    <div><h3>Type</h3>
                         <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2">
                             <input
                                 class="mr-2 leading-tight"
@@ -79,6 +79,7 @@
 
                 <div class="md:flex md:items-center mb-6 md:w-1/2">
                     <div>
+                        <h3>Quality</h3>
                         <label class="block text-gray-700 font-bold">
                             <input
                                 class="mr-2 leading-tight"
