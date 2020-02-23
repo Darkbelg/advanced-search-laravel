@@ -132,7 +132,7 @@
                 <div class="inline-block">
                     <label class="ml-3 text-gray-700 font-bold">
                         <input class="mr-1 leading-tight" type="radio" name="order" value="relevance"
-                               @if( request('order') === 'relevance') checked @else  @endif>
+                               @if( request('order') === 'relevance' || request('order') === null ) checked @else  @endif>
                         <span class="text-sm">Relevance</span>
                     </label>
                 </div>
