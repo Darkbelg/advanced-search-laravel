@@ -85,9 +85,9 @@ class SearchController extends Controller
             'order' => request('order')
         ];
 
-        if (in_array('video', request('type'), false) && count(request('type')) === 1) {
+//        if (in_array('video', request('type'), false) && count(request('type')) === 1) {
             $searchOptions['videoDefinition'] = request('videoDefinition');
-        }
+//        }
 
         $searchResults = $service->search->listSearch('id,snippet', $searchOptions);
 
