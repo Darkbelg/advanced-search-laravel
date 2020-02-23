@@ -1,15 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-    <title>Advanced Search</title>
-</head>
-<body class="bg-gray-200">
-<main>
+@extends('layout')
+
+@section('search')
     <div class="flex">
         <form action="{{ $urlPath }}" method="POST" class="w-full max-w-lg mx-auto bg-white p-4 my-4">
             @csrf
@@ -41,40 +32,40 @@
             </div>
 
             <div class="md:flex md:flex-wrap">
-                <div class="md:flex md:items-center mb-6 md:w-1/2 pt-4">
-                    <div><h3>Type</h3>
-                        <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                            <input
-                                class="mr-2 leading-tight"
-                                type="checkbox"
-                                name="type[channel]"
-                                value="channel"
-                                @if(isset(request('type')['channel']) || request('type') === null) checked @else  @endif >
-                            <span class="text-sm">channel</span>
-                        </label>
-                        <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                            <input
-                                class="mr-2 leading-tight"
-                                type="checkbox"
-                                name="type[playlist]"
-                                value="playlist"
-                                @if(isset(request('type')['playlist']) || request('type') === null) checked @else  @endif >
-                            <span class="text-sm">playlist</span>
-                        </label>
-                        <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2">
-                            <input
-                                class="mr-2 leading-tight"
-                                type="checkbox"
-                                name="type[video]"
-                                value="video"
-                                @if(isset(request('type')['video']) || request('type') === null) checked @else  @endif >
-                            <span class="text-sm">video</span>
-                        </label>
-                        @error('type')
-                        {{ $errors->first('type') }}
-                        @enderror
-                    </div>
-                </div>
+{{--                <div class="md:flex md:items-center mb-6 md:w-1/2 pt-4">--}}
+{{--                    <div><h3>Type</h3>--}}
+{{--                        <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2">--}}
+{{--                            <input--}}
+{{--                                class="mr-2 leading-tight"--}}
+{{--                                type="checkbox"--}}
+{{--                                name="type[channel]"--}}
+{{--                                value="channel"--}}
+{{--                                @if(isset(request('type')['channel']) || request('type') === null) checked @else  @endif >--}}
+{{--                            <span class="text-sm">channel</span>--}}
+{{--                        </label>--}}
+{{--                        <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2">--}}
+{{--                            <input--}}
+{{--                                class="mr-2 leading-tight"--}}
+{{--                                type="checkbox"--}}
+{{--                                name="type[playlist]"--}}
+{{--                                value="playlist"--}}
+{{--                                @if(isset(request('type')['playlist']) || request('type') === null) checked @else  @endif >--}}
+{{--                            <span class="text-sm">playlist</span>--}}
+{{--                        </label>--}}
+{{--                        <label class="block tracking-wide text-gray-700 text-xs font-bold mb-2">--}}
+{{--                            <input--}}
+{{--                                class="mr-2 leading-tight"--}}
+{{--                                type="checkbox"--}}
+{{--                                name="type[video]"--}}
+{{--                                value="video"--}}
+{{--                                @if(isset(request('type')['video']) || request('type') === null) checked @else  @endif >--}}
+{{--                            <span class="text-sm">video</span>--}}
+{{--                        </label>--}}
+{{--                        @error('type')--}}
+{{--                        {{ $errors->first('type') }}--}}
+{{--                        @enderror--}}
+{{--                    </div>--}}
+{{--                </div>--}}
                 {{--    {{ dd(request('type')) }}--}}
 
                 <div class="md:flex md:items-center mb-6 md:w-1/2">
@@ -119,6 +110,53 @@
                     </div>
                 </div>
             </div>
+            <div class="mb-4">
+                <h3>Order</h3>
+                @error('order')
+                {{ $errors->first('order') }}
+                @enderror
+                <div class="inline-block">
+                    <label class="ml-3 text-gray-700 font-bold">
+                        <input class="mr-1 leading-tight" type="radio" name="order" value="date"
+                               @if( request('order') === 'date') checked @else  @endif>
+                        <span class="text-sm">Date</span>
+                    </label>
+                </div>
+                <div class="inline-block">
+                    <label class="ml-3 text-gray-700 font-bold">
+                        <input class="mr-1 leading-tight" type="radio" name="order" value="rating"
+                               @if( request('order') === 'rating') checked @else  @endif>
+                        <span class="text-sm">Rating</span>
+                    </label>
+                </div>
+                <div class="inline-block">
+                    <label class="ml-3 text-gray-700 font-bold">
+                        <input class="mr-1 leading-tight" type="radio" name="order" value="relevance"
+                               @if( request('order') === 'relevance') checked @else  @endif>
+                        <span class="text-sm">Relevance</span>
+                    </label>
+                </div>
+                <div class="inline-block">
+                    <label class="ml-3 text-gray-700 font-bold">
+                        <input class="mr-1 leading-tight" type="radio" name="order" value="title"
+                               @if( request('order') === 'title') checked @else  @endif>
+                        <span class="text-sm">Title</span>
+                    </label>
+                </div>
+                {{--                <div class="inline-block">--}}
+                {{--                    <label class="ml-2 text-gray-700 font-bold" for="videoCount">--}}
+                {{--                        <input class="mr-2 leading-tight" type="radio" name="order" value="videoCount">--}}
+                {{--                        <span class="text-sm">Video Count (Channels Only)</span>--}}
+                {{--                    </label>--}}
+                {{--                </div>--}}
+                <div class="inline-block">
+                    <label class="ml-3 text-gray-700 font-bold">
+                        <input class="mr-1 leading-tight" type="radio" name="order" value="viewCount"
+                               @if( request('order') === 'viewCount') checked @else  @endif>
+                        <span class="text-sm ">View Count</span>
+                    </label>
+                </div>
+            </div>
             <div class="md:flex md:items-center">
                 <div class="m-auto">
                     <button
@@ -129,20 +167,4 @@
             </div>
         </form>
     </div>
-    @isset($results)
-        <div class="w-7/9 p-4">
-            <h2 class="w-1/6 p-6 m-auto">Results</h2>
-            <div class="flex flex-wrap">
-                @foreach ($results as $result)
-                    <div class="w-1/3 md:w-1/6">
-                        <a href="https://www.youtube.com/watch?v={{$result->getId()->getVideoId()}}"
-                           target="_blank"><img
-                                src="{{ $result->getSnippet()->getThumbnails()->getMedium()->getUrl() }}" alt=""></a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endisset
-</main>
-</body>
-</html>
+@endsection

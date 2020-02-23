@@ -12,16 +12,15 @@ class SearchController extends Controller
     //
     public function index(Request $request)
     {
-
         request()->validate(
             [
                 'search' => 'required',
                 'maxResults' => 'required',
-                'type' => 'required',
-                'videoDefinition' => 'required'
+//                'type' => 'required',
+                'videoDefinition' => 'required',
+                'order' => 'required'
             ]
         );
-
 
 
 //        dd(request()->all());
@@ -81,10 +80,12 @@ class SearchController extends Controller
         $searchOptions = [
             'q' => request('search'),
             'maxResults' => request('maxResults'),
-            'type' => implode(',', request('type'))
+            'type' => 'video',
+//            'type' => implode(',', request('type')),
+            'order' => request('order')
         ];
 
-        if (in_array('video', request('type'),false) && count(request('type')) === 1) {
+        if (in_array('video', request('type'), false) && count(request('type')) === 1) {
             $searchOptions['videoDefinition'] = request('videoDefinition');
         }
 
@@ -104,18 +105,62 @@ class SearchController extends Controller
 
 //        die();
 
+        $dataSet = [];
+        $videoIds = [];
+        $dataSetResultCount = [];
+
+        foreach ($searchResults as $key => $searchResult) {
+//            dump($searchResult);
+//            $dataSet[] = '"' . $searchResult['snippet']['publishedAt'] . '"';
+
+            if ($searchResult['id']['kind'] === 'youtube#video') {
+                $videoIds[] = $searchResult['id']['videoId'];
+            }
+        }
+//        sort($dataSet);
+//        $dataSet = implode(',', $dataSet);
+
+        $videoId['id'] = implode(',', $videoIds);
+
+        $videosDetail = $service->videos->listVideos('statistics,contentDetails,snippet,id', $videoId);
+
+        foreach ($videosDetail as $key => $videoDetail){
+            $dataSet[] = '"' .  $videoDetail['statistics']['viewCount'] . '"';
+            $dataSetResultCount[] = '"' . $videoDetail['snippet']['publishedAt'] . '"';
+        }
+
+//        sort($dataSet);
+        $dataSet = implode(',', $dataSet);
+        $dataSetResultCount = implode(',', $dataSetResultCount);
+
+
+
+//        dd($videosDetail);
+
         $urlPath = $this->getUrlPathOnLambda();
-        return view('search', ['results' => $searchResults->getItems(), 'request' => $request, 'urlPath' => $urlPath]);
+        return view(
+            'result',
+            [
+                'results' => $searchResults->getItems(),
+                'request' => $request,
+                'urlPath' => $urlPath,
+                'dataSet' => $dataSet,
+                'dataSetResultCount' => $dataSetResultCount
+            ]
+        );
+    }
+
+    private function getUrlPathOnLambda()
+    {
+        return isset(request()->server()['LAMBDA_CONTEXT']) ? json_decode(
+            request()->server()['LAMBDA_CONTEXT']
+        )->path : '';
     }
 
     public function show()
     {
         $urlPath = $this->getUrlPathOnLambda();
 
-        return view('search',[ 'urlPath' => $urlPath]);
-    }
-
-    private function getUrlPathOnLambda(){
-        return isset(request()->server()['LAMBDA_CONTEXT']) ? json_decode(request()->server()['LAMBDA_CONTEXT'])->path : '';
+        return view('search', ['urlPath' => $urlPath]);
     }
 }
